@@ -39,6 +39,19 @@ void spotify_pause() {
   Serial.println(String(httpCode));
 }
 
+void twilio_text(String body) {
+  HTTPClient client;
+
+  String url = "https://api.twilio.com/2010-04-01/Accounts/AC958ad4c79a2240ae5e25456aa84ac040/Messages.json?To=+18182161021&From=+13235242392"
+                + "&Body=" + body;
+
+  client.begin(url);
+  client.setAuthorization("AC958ad4c79a2240ae5e25456aa84ac040", "e40c0f44f96ee07fb532a6f648523d15");
+
+  int httpCode = client.sendRequest("POST");
+  Serial.println(String(httpCode));
+}
+
 void setup() {
   Serial.begin(115200);
   WiFi.begin(ssid, pass);
@@ -50,7 +63,6 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
   if (WiFi.status() == WL_CONNECTED) {
     int incomingByte;
     if (Serial.available()) {
@@ -62,20 +74,6 @@ void loop() {
           spotify_pause();
           break;
     }
-
-    
-
-    
-//    if (!isPlaying) {
-//      spotify_play();
-//      isPlaying = true;
-//      Serial.println("Unpaused");
-//    }
-//    else {
-//      spotify_pause();
-//      isPlaying = false;
-//      Serial.println("Paused");
-//    }
     delay(1000);
   }
 }
